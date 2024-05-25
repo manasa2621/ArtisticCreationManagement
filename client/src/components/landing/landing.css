@@ -1,0 +1,151 @@
+/* landing.css */
+
+/* Reset styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Global styles */
+body {
+  font-family: "Roboto", sans-serif; /* Stylish font style */
+  background-color: #e6f2e2; /* Light green */
+  color: #333; /* Dark gray */
+  overflow-y: auto; /* Enable vertical scrolling */
+  margin: 0; /* Remove default margin */
+}
+
+.container {
+  width: 90%; /* Adjusted width */
+  margin: 0 auto;
+}
+
+/* Header styles */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure header is on top */
+  background-color: #004d40; /* Dark green */
+  color: #fff;
+  padding: 20px 0;
+}
+
+.header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+}
+
+.auth-buttons .btn {
+  margin-left: 10px;
+  background-color: #4caf50; /* Green */
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.auth-buttons .btn:hover {
+  background-color: #388e3c; /* Darker green */
+}
+
+/* Hero section styles */
+.hero-section {
+  text-align: center;
+  margin-top: 80px; /* Adjusted margin from top */
+  margin-bottom: 40px;
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.hero-section p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+/* Features section styles */
+.features-section h2 {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjusted min width */
+  gap: 20px;
+}
+
+.feature {
+  text-align: center;
+}
+
+.feature i {
+  font-size: 2.5rem; /* Adjusted icon size */
+  margin-bottom: 20px;
+}
+
+.feature h3 {
+  font-size: 1.8rem; /* Adjusted heading size */
+  margin-bottom: 10px;
+}
+
+.feature p {
+  font-size: 1.2rem; /* Adjusted paragraph size */
+}
+
+/* Explore section styles */
+.explore-section h2 {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.explore-item {
+  text-align: center;
+}
+
+.explore-item img {
+  width: 100%;
+  height: 200px; /* Adjust image height */
+  border-radius: 5px;
+}
+
+.explore-item h3 {
+  margin-top: 10px;
+}
+
+/* Footer styles */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure footer is on top */
+  background-color: #004d40; /* Dark green */
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+
+/* Main content styles */
+.main-content {
+  padding-top: 120px; /* Adjust according to header height */
+  padding-bottom: 60px; /* Adjust according to footer height */
+  overflow-y: auto;
+}
