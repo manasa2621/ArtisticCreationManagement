@@ -110,7 +110,6 @@ const ArtImageForm = () => {
             accept="image/*"
             style={{ marginBottom: "20px", width: "100%" }}
           />
-
           <FormControl fullWidth style={{ marginBottom: "20px" }}>
             <InputLabel id="category-label">Category</InputLabel>
             <Select
@@ -118,10 +117,12 @@ const ArtImageForm = () => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
+              <MenuItem value="crafts">Crafts</MenuItem>
               <MenuItem value="painting">Painting</MenuItem>
               <MenuItem value="sculpture">Sculpture</MenuItem>
-              <MenuItem value="photography">Photography</MenuItem>
-              <MenuItem value="digital-art">Digital Art</MenuItem>
+              <MenuItem value="nailArt">nail art</MenuItem>
+              <MenuItem value="Ceramic">Ceramic</MenuItem>
+              <MenuItem value="DrySand">Dry sand</MenuItem>
             </Select>
           </FormControl>
 

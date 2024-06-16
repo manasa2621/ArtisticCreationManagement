@@ -54,6 +54,13 @@ const Navbar = () => {
         >
           View Purchase History
         </Button>
+        <Button
+          component={RouterLink}
+          to="/contact-us"
+          className={classes.button}
+        >
+          Contact us
+        </Button>
         <Button onClick={handleLogout} className={classes.button}>
           Logout
         </Button>

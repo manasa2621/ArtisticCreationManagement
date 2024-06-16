@@ -12,7 +12,12 @@ import UserHomePage from "./components/user/UserHomePage";
 import UserProfile from "./components/user/view_user_profile";
 import Purchase from "./components/login/Purchase";
 import ViewPurchaseHistory from "./components/user/viewPurchaseHistory";
-import CongratulationsBanner from "./components/congratulationBanner"
+import CongratulationsBanner from "./components/congratulationBanner";
+import AdminHome from "./components/adminHome";
+import AdminArts from "./components/admin/adminArts";
+import ContactUs from "./components/user/contact-us";
+import ViewQueries from "./components/admin/view-queries";
+import ViewTransaction from "./components/admin/viewTransaction";
 const App = () => {
   return (
     <div>
@@ -37,7 +42,13 @@ const App = () => {
           <Route path="/user-home" element={<UserHomePage />} />{" "}
           <Route path="/purchase" element={<Purchase />} />{" "}
           <Route path="/add-art-details" element={<ArtDetailsPage />} />{" "}
+          <Route path="/admins-home"element={<AdminHome/>}/>
+          <Route path="/admin-arts"element={<AdminArts/>}/>
+          <Route path="/contact-us"element={<ContactUs/>}/>
+          <Route path="/view-queries"element={<ViewQueries/>}/>
+          <Route path="/view-transaction"element={<ViewTransaction/>}/>
         </Routes>
+
       </Router>
     </div>
   );

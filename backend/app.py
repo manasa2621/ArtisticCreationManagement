@@ -7,12 +7,13 @@ from werkzeug.utils import secure_filename
 from bcrypt import hashpw, gensalt, checkpw
 import os
 import base64
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/artist'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = 'mysecretkey'  # Change this to a secure random key in production
+app.config['JWT_SECRET_KEY'] = 'mysecretkey'  
 
 jwt = JWTManager(app)
 db = SQLAlchemy(app)
@@ -75,6 +76,15 @@ class Feedback(db.Model):
     rating = db.Column(db.Integer, nullable=False)
     feedback = db.Column(db.Text, nullable=True)
 
+class ContactUs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    artist_id = db.Column(db.Integer, db.ForeignKey('user_registration.id'), nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
+    subject = db.Column(db.String(255), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    submitted_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
 def get_artists():
     query = text("SELECT id, email, name, password FROM artists")
     connection = db.engine.connect()
@@ -103,7 +113,6 @@ def signup():
 
 
 
-
     if not (artist_id and first_name and last_name and type_of_user and email and password and profile_picture and contact_no):
         return jsonify({'message': 'Missing required fields'}), 400
 
@@ -124,6 +133,44 @@ def signup():
     except Exception as e:
         db.session.rollback()
         return jsonify({'message': 'Failed to register user', 'error': str(e)}), 500
+
+@app.route('/getusers', methods=['GET'])
+def get_all_user_details():
+    try:
+        users = UserRegistration.query.all()
+        users_list = [
+            {
+                'artist_id': user.artist_id,
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'type_of_user': user.type_of_user,
+                'email': user.email,
+                'contact_no': user.contact_no
+            } for user in users
+        ]
+        return jsonify(users_list), 200
+    except Exception as e:
+        return jsonify({'message': 'Failed to fetch users', 'error': str(e)}), 500
+
+@app.route('/deleteuser', methods=['DELETE'])
+def delete_user_by_id():
+    user_id = request.args.get('id')
+    
+    if not user_id:
+        return jsonify({'message': 'User ID is required'}), 400
+
+    try:
+        user = UserRegistration.query.filter_by(artist_id=user_id).first()
+        if not user:
+            return jsonify({'message': 'User not found'}), 404
+
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'message': 'User deleted successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': 'Failed to delete user', 'error': str(e)}), 500
 
 
 @app.route('/login', methods=['POST'])
@@ -456,6 +503,41 @@ def get_likes():
     except Exception as e:
         return jsonify({'message': 'Failed to fetch likes', 'error': str(e)}), 500
 
+@app.route('/submitcontact', methods=['POST'])
+def submit_contact():
+    try:
+        data = request.get_json()
+        new_contact = ContactUs(
+            artist_id=data['artist_id'],
+            name=data['name'],
+            email=data['email'],
+            subject=data['subject'],
+            message=data['message']
+        )
+        db.session.add(new_contact)
+        db.session.commit()
+        return jsonify({'message': 'Contact submitted successfully'}), 201
+    except Exception as e:
+        return jsonify({'message': 'Failed to submit contact', 'error': str(e)}), 500
+
+@app.route('/getcontacts', methods=['GET'])
+def get_all_contact_details():
+    try:
+        contacts = ContactUs.query.all()
+        contacts_list = [
+            {
+                'id': contact.id,
+                'artist_id': contact.artist_id,
+                'name': contact.name,
+                'email': contact.email,
+                'subject': contact.subject,
+                'message': contact.message,
+                'submitted_at': contact.submitted_at
+            } for contact in contacts
+        ]
+        return jsonify(contacts_list), 200
+    except Exception as e:
+        return jsonify({'message': 'Failed to fetch contact details', 'error': str(e)}), 500
 
 
 if __name__ == '__main__':

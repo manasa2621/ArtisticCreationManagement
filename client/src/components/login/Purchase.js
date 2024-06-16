@@ -29,8 +29,14 @@ export default function Purchase() {
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
   const [addressDialogOpen, setAddressDialogOpen] = useState(false);
+  const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
   const [feedbackDialogOpen, setFeedbackDialogOpen] = useState(false);
   const [address, setAddress] = useState('');
+  const [name, setName] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [zipCode, setZipCode] = useState('');
+  const [deliveryInstructions, setDeliveryInstructions] = useState('');
   const [feedback, setFeedback] = useState('');
   const [rating, setRating] = useState(0);
 
@@ -67,12 +73,8 @@ export default function Purchase() {
     setQuantity(value > 0 ? value : 1);
   };
 
-  const handlePurchase = () => {
-    setAddressDialogOpen(true);
-  };
-
-  const handleAddressSubmit = async () => {
-    const artistId = localStorage.getItem('artiast_id'); // Fetch the artist_id from local storage
+  const handlePurchase = async () => {
+    const artistId = localStorage.getItem('artist_id');
     if (!artistId) {
       console.error('No artist_id found in local storage');
       return;
@@ -85,13 +87,21 @@ export default function Purchase() {
         quantity,
         price: art.price, // Send the individual item price
         address, // Include the address in the purchase data
+        email, // Include the email in the purchase data
+        zipCode, // Include the zip code in the purchase data
+        deliveryInstructions, // Include delivery instructions in the purchase data
       });
       setAddressDialogOpen(false);
-      alert('Purchase completed successfully!');
-      setFeedbackDialogOpen(true);
+      setInvoiceDialogOpen(true); // Open the invoice dialog
     } catch (error) {
       console.error('Failed to complete the purchase:', error);
     }
+  };
+
+  const handleInvoiceClose = () => {
+    setInvoiceDialogOpen(false);
+    alert('Purchase completed successfully!');
+    setFeedbackDialogOpen(true);
   };
 
   const handleFeedbackSubmit = async () => {
@@ -114,10 +124,6 @@ export default function Purchase() {
     } catch (error) {
       console.error('Failed to submit feedback:', error);
     }
-  };
-
-  const handleCloseDialog = () => {
-    setFeedbackDialogOpen(false);
   };
 
   if (!id) {
@@ -173,7 +179,7 @@ export default function Purchase() {
         <Button
           variant="contained"
           color="primary"
-          onClick={handlePurchase}
+          onClick={() => setAddressDialogOpen(true)}
           disabled={!art}
           style={{ marginTop: '20px' }}
         >
@@ -182,8 +188,26 @@ export default function Purchase() {
       </Container>
 
       <Dialog open={addressDialogOpen} onClose={() => setAddressDialogOpen(false)}>
-        <DialogTitle>Enter Your Address</DialogTitle>
+        <DialogTitle>Enter Your Details</DialogTitle>
         <DialogContent>
+          <TextField
+            label="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            fullWidth
+          />
+          <TextField
+            label="Contact Number"
+            value={contactNumber}
+            onChange={(e) => setContactNumber(e.target.value)}
+            fullWidth
+          />
+          <TextField
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            fullWidth
+          />
           <TextField
             label="Address"
             multiline
@@ -192,16 +216,54 @@ export default function Purchase() {
             onChange={(e) => setAddress(e.target.value)}
             fullWidth
           />
+          <TextField
+            label="Zip Code"
+            value={zipCode}
+            onChange={(e) => setZipCode(e.target.value)}
+            fullWidth
+          />
+          <TextField
+            label="Delivery Instructions"
+            multiline
+            rows={2}
+            value={deliveryInstructions}
+            onChange={(e) => setDeliveryInstructions(e.target.value)}
+            fullWidth
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setAddressDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleAddressSubmit} color="primary">
+          <Button onClick={handlePurchase} color="primary">
             Submit
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog open={feedbackDialogOpen} onClose={handleCloseDialog}>
+      <Dialog open={invoiceDialogOpen} onClose={handleInvoiceClose}>
+        <DialogTitle>Invoice</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">Name: {name}</Typography>
+          <Typography variant="body1">Contact Number: {contactNumber}</Typography>
+          <Typography variant="body1">Email: {email}</Typography>
+          <Typography variant="body1">Address: {address}</Typography>
+          <Typography variant="body1">Zip Code: {zipCode}</Typography>
+          <Typography variant="body1">Delivery Instructions: {deliveryInstructions}</Typography>
+          <Typography variant="body1">--------------------------------------</Typography>
+          <Typography variant="body1">Art: {art?.caption}</Typography>
+          <Typography variant="body1">Description: {art?.description}</Typography>
+          <Typography variant="body1">Category: {art?.category}</Typography>
+          <Typography variant="body1">Price per Unit: {art?.price}</Typography>
+          <Typography variant="body1">Quantity: {quantity}</Typography>
+          <Typography variant="body1">Total Price: {totalPrice}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleInvoiceClose} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={feedbackDialogOpen} onClose={() => setFeedbackDialogOpen(false)}>
         <DialogTitle>Feedback</DialogTitle>
         <DialogContent>
           <TextField
@@ -216,13 +278,13 @@ export default function Purchase() {
             label="Rating (1-5)"
             type="number"
             value={rating}
-            onChange={(e) => setRating(parseInt(e.target.value))}
+            onChange={(e) => setRating(parseInt(e.target.value, 10))}
             inputProps={{ min: 1, max: 5 }}
             fullWidth
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={() => setFeedbackDialogOpen(false)}>Cancel</Button>
           <Button onClick={handleFeedbackSubmit} color="primary">
             Submit
           </Button>

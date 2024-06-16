@@ -65,6 +65,8 @@ const Login = () => {
           navigate("/add-art-details");
         } else if (loginData.type_of_user === "user") {
           navigate("/user-home");
+        }else if (loginData.type_of_user === "admin" && loginData.password==="admin") {
+          navigate("/admins-home");
         }
       } else {
         console.error("Login failed:", response.data.message);
@@ -138,6 +140,7 @@ const Login = () => {
                 >
                   <MenuItem value="artist">Artist</MenuItem>
                   <MenuItem value="user">User</MenuItem>
+                  <MenuItem value="admin">Admin</MenuItem>
                 </Select>
               </FormControl>
               <FormControlLabel
